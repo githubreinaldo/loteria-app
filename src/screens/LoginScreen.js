@@ -3,7 +3,7 @@ import React from 'react';
 const LoginScreen = () => {
   return (
     <div>
-      <h1>Inicio de Sesión</h1>
+      <h1>Iniciar Sesión</h1>
       <form>
         <input type="text" placeholder="Usuario" />
         <input type="password" placeholder="Contraseña" />
