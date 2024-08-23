@@ -1,0 +1,18 @@
+{
+  "name": "loteria-app",
+  "version": "1.0.0",
+  "description": "Este es un proyecto de una aplicación de lotería simple para Android e iPhone que incluye funcionalidades para usuarios y administradores.",
+  "main": "index.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-scripts": "^5.0.1"
+  }
+}
