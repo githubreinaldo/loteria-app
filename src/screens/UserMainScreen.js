@@ -1,15 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const UserMainScreen = () => {
-  const saldo = 100; // Ejemplo de saldo
+  const [balance, setBalance] = useState(0);
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    fetchBalance();
+  }, []);
+
+  const fetchBalance = async () => {
+    try {
+      const response = await fetch('/api/balance');
+      const data = await response.json();
+
+      if (data.success) {
+        setBalance(data.balance);
+      } else {
+        setMessage('Error al obtener el saldo.');
+      }
+    } catch (error) {
+      setMessage('Error al conectar con el servidor.');
+    }
+  };
 
   return (
     <div>
-      <h1>Pantalla Principal de Usuario</h1>
-      <p>Saldo: $\{saldo}</p>
-      <button>Realizar Jugada</button>
-      <button>Ver Historial</button>
-      <button>Ver Resultados</button>
+      <h3>Saldo actual: {balance} USD</h3>
+      {message && <p>{message}</p>}
     </div>
   );
 };

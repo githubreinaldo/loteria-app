@@ -1,24 +1,46 @@
-import React from 'react';
-import List from '../components/List';
-import '../styles/styles.css';
+import React, { useState, useEffect } from 'react';
 
 const HistoryScreen = () => {
-  const historial = [
-    { fecha: '2024-08-20', numero: 5, resultado: 'Ganador' },
-    { fecha: '2024-08-19', numero: 2, resultado: 'Perdedor' },
-    { fecha: '2024-08-18', numero: 7, resultado: 'Perdedor' },
-  ];
+  const [history, setHistory] = useState([]);
+  const [message, setMessage] = useState('');
 
-  const renderItem = (jugada) => (
-    `${jugada.fecha} - Número: ${jugada.numero} - Resultado: ${jugada.resultado}`
-  );
+  useEffect(() => {
+    fetchHistory();
+  }, []);
+
+  const fetchHistory = async () => {
+    try {
+      const response = await fetch('/api/history');
+      const data = await response.json();
+
+      if (data.success) {
+        setHistory(data.history);
+      } else {
+        setMessage('Error al obtener el historial.');
+      }
+    } catch (error) {
+      setMessage('Error al conectar con el servidor.');
+    }
+  };
 
   return (
     <div>
-      <h1>Historial de Jugadas</h1>
-      <List items={historial} renderItem={renderItem} />
+      <h3>Historial de Jugadas</h3>
+      <ul>
+        {history.length > 0 ? (
+          history.map((play, index) => (
+            <li key={index}>
+              {play.date} - Número: {play.number} - Monto: {play.amount} - Resultado: {play.result}
+            </li>
+          ))
+        ) : (
+          <li>No tienes jugadas registradas.</li>
+        )}
+      </ul>
+      {message && <p>{message}</p>}
     </div>
   );
 };
 
 export default HistoryScreen;
+

@@ -1,23 +1,43 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const ResultsScreen = () => {
-  const resultados = [
-    { fecha: '2024-08-20', numero: 5 },
-    { fecha: '2024-08-19', numero: 2 },
-    { fecha: '2024-08-18', numero: 7 },
-    // Simulación de más resultados
-  ];
+  const [results, setResults] = useState([]);
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    fetchResults();
+  }, []);
+
+  const fetchResults = async () => {
+    try {
+      const response = await fetch('/api/results');
+      const data = await response.json();
+
+      if (data.success) {
+        setResults(data.results);
+      } else {
+        setMessage('Error al obtener los resultados.');
+      }
+    } catch (error) {
+      setMessage('Error al conectar con el servidor.');
+    }
+  };
 
   return (
     <div>
-      <h1>Resultados Ganadores</h1>
+      <h3>Resultados Ganadores</h3>
       <ul>
-        {resultados.map((resultado, index) => (
-          <li key={index}>
-            {resultado.fecha} - Número Ganador: {resultado.numero}
-          </li>
-        ))}
+        {results.length > 0 ? (
+          results.map((result, index) => (
+            <li key={index}>
+              {result.date} - Número ganador: {result.number}
+            </li>
+          ))
+        ) : (
+          <li>No hay resultados disponibles.</li>
+        )}
       </ul>
+      {message && <p>{message}</p>}
     </div>
   );
 };

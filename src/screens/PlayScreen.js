@@ -1,39 +1,56 @@
 import React, { useState } from 'react';
 
-function PlayScreen() {
-  const [numberPlayed, setNumberPlayed] = useState('');
-  const [amount, setAmount] = useState('');
+const PlayScreen = () => {
+  const [playNumber, setPlayNumber] = useState('');
+  const [betAmount, setBetAmount] = useState('');
+  const [message, setMessage] = useState('');
 
   const handlePlay = async () => {
-    const response = await fetch('/api/play', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username: 'usuarioEjemplo', numberPlayed, amount }),
-    });
-    const data = await response.json();
-    console.log(data);
+    if (!playNumber || !betAmount) {
+      setMessage('Por favor, ingrese un número y un monto para la jugada.');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/play', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ number: playNumber, amount: betAmount }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setMessage('¡Jugada realizada con éxito!');
+      } else {
+        setMessage('Error al realizar la jugada.');
+      }
+    } catch (error) {
+      setMessage('Error al conectar con el servidor.');
+    }
   };
 
   return (
     <div>
-      <h1>Realizar Jugada</h1>
+      <h3>Realizar Jugada</h3>
       <input
-        type="text"
+        type="number"
         placeholder="Número"
-        value={numberPlayed}
-        onChange={(e) => setNumberPlayed(e.target.value)}
+        value={playNumber}
+        onChange={(e) => setPlayNumber(e.target.value)}
       />
       <input
-        type="text"
+        type="number"
         placeholder="Monto"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
+        value={betAmount}
+        onChange={(e) => setBetAmount(e.target.value)}
       />
       <button onClick={handlePlay}>Jugar</button>
+      {message && <p>{message}</p>}
     </div>
   );
-}
+};
 
 export default PlayScreen;
