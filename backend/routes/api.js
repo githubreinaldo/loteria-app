@@ -4,6 +4,25 @@ const Play = require('../models/Play');
 const User = require('../models/User');
 const Result = require('../models/Result');
 
+// Ruta para manejar el login
+router.post('/login', async (req, res) => {
+  const { username, password } = req.body;
+  try {
+    // Buscar al usuario en la base de datos
+    const user = await User.findOne({ username });
+    if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+
+    // Verificar la contraseña (actualmente sin cifrar)
+    if (user.password === password) {
+      return res.json({ message: 'Inicio de sesión exitoso', user });
+    } else {
+      return res.status(401).json({ message: 'Credenciales incorrectas' });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: 'Error del servidor', error });
+  }
+});
+
 // Ruta para realizar una jugada
 router.post('/play', async (req, res) => {
   const { username, numberPlayed, amount } = req.body;
