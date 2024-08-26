@@ -1,92 +1,61 @@
 import React, { useState, useEffect } from 'react';
 
 const ResultsScreen = () => {
-  const [newResult, setNewResult] = useState('');
   const [results, setResults] = useState([]);
-  const [message, setMessage] = useState('');
+  const [newResult, setNewResult] = useState('');
 
   useEffect(() => {
+    const fetchResults = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/results');
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+        const data = await response.json();
+        setResults(data.results);
+      } catch (error) {
+        console.error('Error al obtener los resultados:', error);
+        alert(`Error: ${error.message}`);
+      }
+    };
+
     fetchResults();
   }, []);
 
-  const fetchResults = async () => {
+  const addResult = async () => {
     try {
-      const response = await fetch('/api/results');
-      const data = await response.json();
-
-      if (data.success) {
-        setResults(data.results);
-      } else {
-        setMessage('Error al obtener los resultados.');
-      }
-    } catch (error) {
-      setMessage('Error al conectar con el servidor.');
-    }
-  };
-
-  const handleAddResult = async () => {
-    if (!newResult) {
-      setMessage('Por favor, ingrese el nuevo resultado.');
-      return;
-    }
-
-    try {
-      const response = await fetch('/api/add-result', {
+      const response = await fetch('http://localhost:3001/api/add-result', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ result: newResult }),
       });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setMessage('Resultado agregado con éxito.');
-        setNewResult('');
-        fetchResults(); // Actualizar la lista de resultados
-      } else {
-        setMessage('Error al agregar el resultado.');
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
       }
+      const data = await response.json();
+      alert('Resultado agregado con éxito');
+      setResults([...results, data.result]);
     } catch (error) {
-      setMessage('Error al conectar con el servidor.');
+      console.error('Error al agregar el resultado:', error);
+      alert(`Error: ${error.message}`);
     }
   };
 
   return (
     <div>
-      <h3>Gestionar Resultados</h3>
-
-      {/* Sección para agregar un nuevo resultado */}
-      <div>
-        <input
-          type="text"
-          placeholder="Nuevo Resultado"
-          value={newResult}
-          onChange={(e) => setNewResult(e.target.value)}
-        />
-        <button onClick={handleAddResult}>Agregar Resultado</button>
-      </div>
-
-      {/* Sección para mostrar los resultados existentes */}
-      <div>
-        <h4>Resultados Registrados</h4>
-        <ul>
-          {results.length > 0 ? (
-            results.map((result, index) => (
-              <li key={index}>{result.date} - {result.result}</li>
-            ))
-          ) : (
-            <li>No hay resultados registrados.</li>
-          )}
-        </ul>
-      </div>
-
-      {/* Mensaje de éxito o error */}
-      {message && <p>{message}</p>}
+      <h1>Resultados</h1>
+      <p>Resultados: {results.map((r, index) => <li key={index}>{r}</li>)}</p>
+      <input
+        type="text"
+        value={newResult}
+        onChange={(e) => setNewResult(e.target.value)}
+        placeholder="Agregar nuevo resultado"
+      />
+      <button onClick={addResult}>Agregar Resultado</button>
     </div>
   );
 };
 
 export default ResultsScreen;
-

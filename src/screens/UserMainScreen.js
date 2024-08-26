@@ -2,31 +2,29 @@ import React, { useState, useEffect } from 'react';
 
 const UserMainScreen = () => {
   const [balance, setBalance] = useState(0);
-  const [message, setMessage] = useState('');
 
   useEffect(() => {
+    const fetchBalance = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/balance');
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+        const data = await response.json();
+        setBalance(data.balance);
+      } catch (error) {
+        console.error('Error al obtener el saldo:', error);
+        alert(`Error: ${error.message}`);
+      }
+    };
+
     fetchBalance();
   }, []);
 
-  const fetchBalance = async () => {
-    try {
-      const response = await fetch('/api/balance');
-      const data = await response.json();
-
-      if (data.success) {
-        setBalance(data.balance);
-      } else {
-        setMessage('Error al obtener el saldo.');
-      }
-    } catch (error) {
-      setMessage('Error al conectar con el servidor.');
-    }
-  };
-
   return (
     <div>
-      <h3>Saldo actual: {balance} USD</h3>
-      {message && <p>{message}</p>}
+      <h1>Pantalla Principal de Usuario</h1>
+      <p>Saldo: {balance}</p>
     </div>
   );
 };
