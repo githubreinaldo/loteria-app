@@ -7,6 +7,10 @@ const Result = require('../models/Result');
 // Ruta para manejar el login
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
+
+  // Verificar los datos recibidos desde el frontend
+  console.log('Datos recibidos desde el frontend:', username, password);
+
   try {
     // Buscar al usuario en la base de datos
     const user = await User.findOne({ username });
@@ -26,9 +30,14 @@ router.post('/login', async (req, res) => {
 // Ruta para realizar una jugada
 router.post('/play', async (req, res) => {
   const { username, numberPlayed, amount } = req.body;
+
+  // Verificar los datos recibidos para la jugada
+  console.log('Jugada recibida:', username, numberPlayed, amount);
+
   try {
     const user = await User.findOne({ username });
     if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+
     const newPlay = new Play({ user: user._id, numberPlayed, amount });
     await newPlay.save();
     res.json({ message: 'Jugada registrada', play: newPlay });
@@ -40,9 +49,13 @@ router.post('/play', async (req, res) => {
 // Ruta para consultar el historial de jugadas
 router.get('/history', async (req, res) => {
   const { username } = req.query;
+
+  console.log('Consultando historial para:', username);
+
   try {
     const user = await User.findOne({ username });
     if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+
     const plays = await Play.find({ user: user._id });
     res.json({ history: plays });
   } catch (error) {
@@ -63,6 +76,9 @@ router.get('/results', async (req, res) => {
 // Ruta para actualizar el saldo del usuario
 router.post('/balance', async (req, res) => {
   const { username, amount } = req.body;
+
+  console.log('Actualizando saldo para:', username, 'Monto:', amount);
+
   try {
     const user = await User.findOneAndUpdate(
       { username },
@@ -70,6 +86,7 @@ router.post('/balance', async (req, res) => {
       { new: true }
     );
     if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+
     res.json({ message: 'Saldo actualizado', balance: user.balance });
   } catch (error) {
     res.status(500).json({ message: 'Error al actualizar el saldo', error });
@@ -79,6 +96,9 @@ router.post('/balance', async (req, res) => {
 // Ruta para registrar resultados ganadores (administrativa)
 router.post('/admin/results', async (req, res) => {
   const { winningNumbers } = req.body;
+
+  console.log('Registrando resultados ganadores:', winningNumbers);
+
   try {
     const newResult = new Result({ winningNumbers });
     await newResult.save();
