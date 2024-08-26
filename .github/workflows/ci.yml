@@ -12,14 +12,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [16.x, 20.x]  # Usamos Node.js 16.x y 20.x para compatibilidad futura
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3  # Actualizamos a v3 para compatibilidad con Node 16 y 20
 
       - name: Set up Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3  # Actualizamos a v3
         with:
-          node-version: '16'
+          node-version: ${{ matrix.node-version }}
 
       - name: Install dependencies
         run: npm install
