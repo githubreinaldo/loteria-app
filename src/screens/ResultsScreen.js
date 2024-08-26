@@ -7,7 +7,7 @@ const ResultsScreen = () => {
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/results');
+        const response = await fetch('https://7jtlss-3001.csb.app/api/results');
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
@@ -24,7 +24,7 @@ const ResultsScreen = () => {
 
   const addResult = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/add-result', {
+      const response = await fetch('https://7jtlss-3001.csb.app/api/add-result', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

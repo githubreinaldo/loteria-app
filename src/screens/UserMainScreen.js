@@ -6,7 +6,7 @@ const UserMainScreen = () => {
   useEffect(() => {
     const fetchBalance = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/balance');
+        const response = await fetch('https://7jtlss-3001.csb.app/api/balance');
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }

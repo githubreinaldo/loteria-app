@@ -9,7 +9,7 @@ const UserPanel = () => {
     // Obtener saldo
     const fetchBalance = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/balance');
+        const response = await fetch('https://7jtlss-3001.csb.app/api/balance');
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
@@ -24,7 +24,7 @@ const UserPanel = () => {
     // Obtener historial
     const fetchHistory = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/history');
+        const response = await fetch('https://7jtlss-3001.csb.app/api/history');
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
@@ -39,7 +39,7 @@ const UserPanel = () => {
     // Obtener resultados
     const fetchResults = async () => {
       try {
-        const response = await fetch('http://localhost:3001/api/results');
+        const response = await fetch('https://7jtlss-3001.csb.app/api/results');
         if (!response.ok) {
           throw new Error(`Error: ${response.statusText}`);
         }
@@ -67,3 +67,4 @@ const UserPanel = () => {
 };
 
 export default UserPanel;
+
