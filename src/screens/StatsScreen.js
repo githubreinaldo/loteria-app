@@ -1,23 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const StatsScreen = () => {
-  const estadisticas = [
-    { numero: 5, jugadas: 10 },
-    { numero: 2, jugadas: 8 },
-    { numero: 7, jugadas: 15 },
-    // Simulación de más estadísticas
-  ];
+  const [stats, setStats] = useState({});
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      const response = await fetch('/api/stats');
+      const data = await response.json();
+
+      if (data.success) {
+        setStats(data.stats);
+      } else {
+        setMessage('Error al obtener las estadísticas.');
+      }
+    } catch (error) {
+      setMessage('Error al conectar con el servidor.');
+    }
+  };
 
   return (
     <div>
-      <h1>Estadísticas de Jugadas</h1>
-      <ul>
-        {estadisticas.map((stats, index) => (
-          <li key={index}>
-            Número: {stats.numero} - Jugadas: {stats.jugadas}
-          </li>
-        ))}
-      </ul>
+      <h3>Estadísticas de Jugadas</h3>
+      <p>Total de Jugadas: {stats.totalPlays}</p>
+      <p>Número más Jugado: {stats.mostPlayedNumber}</p>
+      {/* Añade más estadísticas según sea necesario */}
+      {message && <p>{message}</p>}
     </div>
   );
 };
