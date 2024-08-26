@@ -4,10 +4,8 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/loteria', {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    // Conectar a MongoDB sin las opciones obsoletas
+    const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/loteria');
     console.log(`MongoDB conectado: ${conn.connection.host}`);
   } catch (error) {
     console.error(`Error: ${error.message}`);
@@ -16,3 +14,4 @@ const connectDB = async () => {
 };
 
 module.exports = connectDB;
+
