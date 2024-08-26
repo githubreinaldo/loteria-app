@@ -14,16 +14,33 @@ function App() {
   const [isAdmin, setIsAdmin] = useState(false);  // Estado para determinar si es administrador
 
   // Función para manejar el login y autenticación
-  const handleLogin = (username, password) => {
-    // Aquí agregas la lógica de autenticación, puede ser una llamada a la API
-    if (username === 'admin' && password === 'admin') {
-      setIsAuthenticated(true);
-      setIsAdmin(true);
-    } else if (username === 'user' && password === 'user') {
-      setIsAuthenticated(true);
-      setIsAdmin(false);
-    } else {
-      alert('Credenciales incorrectas');
+  const handleLogin = async (username, password) => {
+    try {
+      // Realiza una solicitud POST al backend con las credenciales de usuario
+      const response = await fetch('https://7jtlss-3001.csb.app/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      // Verifica si el login fue exitoso
+      if (data.message === 'Inicio de sesión exitoso') {
+        setIsAuthenticated(true);
+        if (data.user.role === 'admin') {
+          setIsAdmin(true);  // Si el usuario es administrador, actualiza el estado
+        } else {
+          setIsAdmin(false);  // Si no es administrador
+        }
+      } else {
+        alert(data.message);  // Mostrar mensaje de credenciales incorrectas o error
+      }
+    } catch (error) {
+      alert('Error al conectar con el servidor');
+      console.error(error);
     }
   };
 
@@ -38,7 +55,7 @@ function App() {
               isAuthenticated ? (
                 isAdmin ? <Navigate to="/admin" /> : <Navigate to="/user" />
               ) : (
-                <LoginScreen handleLogin={handleLogin} />
+                <LoginScreen handleLogin={handleLogin} />  // Pasamos la función handleLogin a LoginScreen
               )
             }
           />
