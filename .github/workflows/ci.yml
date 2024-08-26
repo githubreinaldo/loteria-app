@@ -14,14 +14,14 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x, 20.x]  # Ejecutar pruebas en Node.js 16.x y 20.x
+        node-version: [16.x, 20.x]  # Probar en Node.js 16.x y 20.x
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3  # Usar la versión v3 en lugar de v2
+        uses: actions/checkout@v3  # Asegúrate de usar v3 de checkout
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3  # Usar la versión v3 en lugar de v2
+        uses: actions/setup-node@v3  # Usa la versión más reciente de setup-node
         with:
           node-version: ${{ matrix.node-version }}
 
