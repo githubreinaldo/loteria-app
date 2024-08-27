@@ -24,9 +24,9 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Nueva Ruta para registrar un nuevo usuario
+// Nueva Ruta para registrar un nuevo usuario o administrador
 router.post('/register', async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, isAdmin } = req.body;  // Se añade isAdmin para identificar administradores
 
   if (!username || !password) {
     return res.status(400).json({ message: 'El nombre de usuario y la contraseña son obligatorios' });
@@ -38,7 +38,7 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'El nombre de usuario ya está en uso' });
     }
 
-    const newUser = new User({ username, password });
+    const newUser = new User({ username, password, isAdmin });  // Se guarda con el flag isAdmin
     await newUser.save();
 
     res.status(201).json({ message: 'Usuario registrado con éxito', user: newUser });
