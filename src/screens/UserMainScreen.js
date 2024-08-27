@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';  // Importamos Link para redirigir a la jugada
 
 const UserMainScreen = () => {
   const [balance, setBalance] = useState(0);
@@ -25,6 +26,11 @@ const UserMainScreen = () => {
     <div>
       <h1>Pantalla Principal de Usuario</h1>
       <p>Saldo: {balance}</p>
+
+      {/* Añadir enlace a la pantalla de jugada */}
+      <Link to="/play">
+        <button>Realizar Jugada</button>
+      </Link>
     </div>
   );
 };
