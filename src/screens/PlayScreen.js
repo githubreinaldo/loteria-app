@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const PlayScreen = () => {
+const PlayScreen = ({ username }) => {  // Recibimos el nombre de usuario como prop desde App.js
   const [playNumber, setPlayNumber] = useState('');
   const [betAmount, setBetAmount] = useState('');
   const [message, setMessage] = useState('');
@@ -17,19 +17,15 @@ const PlayScreen = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          username: 'nuevoUsuario',  // Incluye el nombre de usuario
-          numberPlayed: playNumber,
-          amount: betAmount
-        }),
+        body: JSON.stringify({ username, numberPlayed: playNumber, amount: betAmount }),  // Pasamos el nombre de usuario con la jugada
       });
 
       const data = await response.json();
 
-      if (data.message === 'Jugada registrada') {
+      if (response.ok) {
         setMessage('¡Jugada realizada con éxito!');
       } else {
-        setMessage('Error al realizar la jugada.');
+        setMessage(`Error: ${data.message}`);
       }
     } catch (error) {
       setMessage('Error al conectar con el servidor.');

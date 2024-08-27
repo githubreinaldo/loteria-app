@@ -13,6 +13,7 @@ import RegisterScreen from './screens/RegisterScreen';  // Importa la pantalla d
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);  // Estado de autenticación
   const [isAdmin, setIsAdmin] = useState(false);  // Estado para determinar si es administrador
+  const [loggedInUsername, setLoggedInUsername] = useState('');  // Almacena el nombre de usuario
 
   // Función para manejar el login y autenticación
   const handleLogin = async (username, password) => {
@@ -31,6 +32,7 @@ function App() {
       // Verifica si el login fue exitoso
       if (data.message === 'Inicio de sesión exitoso') {
         setIsAuthenticated(true);
+        setLoggedInUsername(username);  // Almacenar el nombre de usuario
         if (data.user.role === 'admin') {
           setIsAdmin(true);  // Si el usuario es administrador, actualiza el estado
         } else {
@@ -61,7 +63,7 @@ function App() {
             }
           />
           <Route path="/register" element={<RegisterScreen />} />  {/* Nueva ruta para el registro */}
-          <Route path="/play" element={<PlayScreen />} />
+          <Route path="/play" element={<PlayScreen username={loggedInUsername} />} />  {/* Pasamos el username a PlayScreen */}
           <Route path="/history" element={<HistoryScreen />} />
           <Route path="/results" element={<ResultsScreen />} />
           {isAdmin && (
@@ -71,7 +73,7 @@ function App() {
               <Route path="/stats" element={<StatsScreen />} />
             </>
           )}
-          {!isAdmin && <Route path="/user" element={<UserMainScreen />} />}
+          {!isAdmin && <Route path="/user" element={<UserMainScreen username={loggedInUsername} />} />}  {/* Pasamos el username a UserMainScreen */}
         </Routes>
       </div>
     </Router>
@@ -79,3 +81,4 @@ function App() {
 }
 
 export default App;
+
