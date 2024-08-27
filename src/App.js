@@ -8,7 +8,9 @@ import PlayScreen from './screens/PlayScreen';
 import ResultsScreen from './screens/ResultsScreen';
 import StatsScreen from './screens/StatsScreen';
 import UserMainScreen from './screens/UserMainScreen';
-import RegisterScreen from './screens/RegisterScreen';  // Importa la pantalla de registro
+import RegisterScreen from './screens/RegisterScreen';
+import ManagePlaysScreen from './screens/ManagePlaysScreen';  // Nueva pantalla para gestionar jugadas
+import PlayerHistoryScreen from './screens/PlayerHistoryScreen';  // Nueva pantalla para el historial de jugadores
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);  // Estado de autenticación
@@ -69,8 +71,10 @@ function App() {
           {isAdmin && (
             <>
               <Route path="/admin" element={<AdminMainScreen />} />
-              <Route path="/modify-balance" element={<ModifyBalanceScreen />} />
-              <Route path="/stats" element={<StatsScreen />} />
+              <Route path="/admin/manage-plays" element={<ManagePlaysScreen />} />  {/* Ruta para gestionar jugadas */}
+              <Route path="/admin/modify-balance" element={<ModifyBalanceScreen />} />
+              <Route path="/admin/stats" element={<StatsScreen />} />
+              <Route path="/admin/player-history" element={<PlayerHistoryScreen />} />  {/* Ruta para historial de jugadores */}
             </>
           )}
           {!isAdmin && <Route path="/user" element={<UserMainScreen username={loggedInUsername} />} />}  {/* Pasamos el username a UserMainScreen */}
