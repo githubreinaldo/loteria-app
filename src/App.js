@@ -8,6 +8,7 @@ import PlayScreen from './screens/PlayScreen';
 import ResultsScreen from './screens/ResultsScreen';
 import StatsScreen from './screens/StatsScreen';
 import UserMainScreen from './screens/UserMainScreen';
+import RegisterScreen from './screens/RegisterScreen';  // Importa la pantalla de registro
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);  // Estado de autenticación
@@ -59,6 +60,7 @@ function App() {
               )
             }
           />
+          <Route path="/register" element={<RegisterScreen />} />  {/* Nueva ruta para el registro */}
           <Route path="/play" element={<PlayScreen />} />
           <Route path="/history" element={<HistoryScreen />} />
           <Route path="/results" element={<ResultsScreen />} />

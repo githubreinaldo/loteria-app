@@ -8,15 +8,12 @@ const Result = require('../models/Result');
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
-  // Verificar los datos recibidos desde el frontend
   console.log('Datos recibidos desde el frontend:', username, password);
 
   try {
-    // Buscar al usuario en la base de datos
     const user = await User.findOne({ username });
     if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
 
-    // Verificar la contraseña (actualmente sin cifrar)
     if (user.password === password) {
       return res.json({ message: 'Inicio de sesión exitoso', user });
     } else {
@@ -27,11 +24,33 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Nueva Ruta para registrar un nuevo usuario
+router.post('/register', async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username || !password) {
+    return res.status(400).json({ message: 'El nombre de usuario y la contraseña son obligatorios' });
+  }
+
+  try {
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(400).json({ message: 'El nombre de usuario ya está en uso' });
+    }
+
+    const newUser = new User({ username, password });
+    await newUser.save();
+
+    res.status(201).json({ message: 'Usuario registrado con éxito', user: newUser });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al registrar el usuario', error });
+  }
+});
+
 // Ruta para realizar una jugada
 router.post('/play', async (req, res) => {
   const { username, numberPlayed, amount } = req.body;
 
-  // Verificar los datos recibidos para la jugada
   console.log('Jugada recibida:', username, numberPlayed, amount);
 
   try {
