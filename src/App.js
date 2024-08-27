@@ -8,7 +8,7 @@ import PlayScreen from './screens/PlayScreen';
 import ResultsScreen from './screens/ResultsScreen';
 import StatsScreen from './screens/StatsScreen';
 import UserMainScreen from './screens/UserMainScreen';
-import RegisterScreen from './screens/RegisterScreen';
+import RegisterScreen from './screens/RegisterScreen';  // Importa la pantalla de registro
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);  // Estado de autenticación
@@ -33,7 +33,11 @@ function App() {
       if (data.message === 'Inicio de sesión exitoso') {
         setIsAuthenticated(true);
         setLoggedInUsername(username);  // Almacenar el nombre de usuario
-        setIsAdmin(data.isAdmin);  // Establecer si es administrador según la respuesta del backend
+        if (data.user.isAdmin) {  // Verifica si el usuario tiene el rol de admin
+          setIsAdmin(true);  // Si el usuario es administrador, actualiza el estado
+        } else {
+          setIsAdmin(false);  // Si no es administrador
+        }
       } else {
         alert(data.message);  // Mostrar mensaje de credenciales incorrectas o error
       }
