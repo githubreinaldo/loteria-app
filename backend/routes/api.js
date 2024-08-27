@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Play = require('../models/Play');
 const User = require('../models/User');
+const Admin = require('../models/Admin'); // Importa el modelo de Admin
 const Result = require('../models/Result');
 
 // Ruta para manejar el login
@@ -11,7 +12,14 @@ router.post('/login', async (req, res) => {
   console.log('Datos recibidos desde el frontend:', username, password);
 
   try {
-    const user = await User.findOne({ username });
+    // Buscar primero en la colección de administradores
+    let user = await Admin.findOne({ username });
+
+    // Si no se encuentra en la colección de Admin, buscar en User
+    if (!user) {
+      user = await User.findOne({ username });
+    }
+
     if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
 
     if (user.password === password) {
@@ -26,19 +34,33 @@ router.post('/login', async (req, res) => {
 
 // Nueva Ruta para registrar un nuevo usuario o administrador
 router.post('/register', async (req, res) => {
-  const { username, password, isAdmin } = req.body;  // Se añade isAdmin para identificar administradores
+  const { username, password, isAdmin } = req.body;
 
   if (!username || !password) {
     return res.status(400).json({ message: 'El nombre de usuario y la contraseña son obligatorios' });
   }
 
   try {
+    // Si es administrador, guarda en la colección de Admin
+    if (isAdmin) {
+      const existingAdmin = await Admin.findOne({ username });
+      if (existingAdmin) {
+        return res.status(400).json({ message: 'El nombre de administrador ya está en uso' });
+      }
+
+      const newAdmin = new Admin({ username, password });
+      await newAdmin.save();
+
+      return res.status(201).json({ message: 'Administrador registrado con éxito', user: newAdmin });
+    }
+
+    // Si no es administrador, guarda en la colección de User
     const existingUser = await User.findOne({ username });
     if (existingUser) {
       return res.status(400).json({ message: 'El nombre de usuario ya está en uso' });
     }
 
-    const newUser = new User({ username, password, isAdmin });  // Se guarda con el flag isAdmin
+    const newUser = new User({ username, password });
     await newUser.save();
 
     res.status(201).json({ message: 'Usuario registrado con éxito', user: newUser });
@@ -128,3 +150,4 @@ router.post('/admin/results', async (req, res) => {
 });
 
 module.exports = router;
+
