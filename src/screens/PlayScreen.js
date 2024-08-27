@@ -12,7 +12,7 @@ const PlayScreen = () => {
     }
 
     try {
-      const response = await fetch('https://7jtlss-3001.csb.app/play', {
+      const response = await fetch('https://7jtlss-3001.csb.app/api/play', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
